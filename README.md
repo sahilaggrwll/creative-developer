@@ -41,6 +41,8 @@ What changes in the GWD version:
 
 The packaged ad from GWD's *Publish → Locally* lands in `gwd/Creative-Developer/Creative-Developer_360x640.zip`.
 
+**Why the GWD version takes ~2.7 s to appear on GitHub Pages.** GWD only shows the first page once Google's `Enabler.js` reports the ad as visible. With no ad server, Enabler runs in test mode ("Simulating local events") and fakes those signals with fixed timers: INIT after about 1 s, PAGE_LOADED 1 s later, VISIBLE 0.5 s after that. The ad's own code is ready at about 0.5 s, the same as the plain version. Served from DV360, the ad server sends these signals when the interstitial opens, so the timer delay goes away. Turning polite loading off makes no difference here (measured: 2.73 s either way). For reviewing, use the plain version.
+
 ## Run
 
 Serve the repo with any static server (GitHub Pages, Netlify, Vercel, or `python3 -m http.server`) and open `plain/index.html`.
