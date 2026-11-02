@@ -17,9 +17,9 @@ Vanilla HTML/CSS/JS, no libraries. Initial load is about **600 KB** plus web fon
 | `front.png`, dark studio, square | end card | `front.webp` |
 | `card-1…5.png`, close-ups | feature cards | `card-1…5.webp` |
 
-Gemini puts a visible ✦ mark in the bottom-right corner of each image. Every image is cropped so that corner is not included (see `build_photos()` in `tools/build_assets.py`).
+Gemini puts a visible ✦ mark in the bottom-right corner of each image. Every image is cropped so that corner is not included.
 
-The originals (63 MB, watermarked) are not included. `tools/build_assets.py` documents every processing step; with the originals placed in `assets/source/` it rebuilds `plain/assets/build/` (needs Pillow, numpy, scipy and ImageMagick).
+The originals (63 MB, watermarked) are not included; only the processed WebP files are.
 
 Everything else is drawn in code: the city, the street, rain, light effects and icons.
 
@@ -30,7 +30,7 @@ Everything else is drawn in code: the city, the street, rain, light effects and 
 | `plain/` | The ad as plain HTML/CSS/JS. This is the source of truth, and what the live link serves. |
 | `gwd/` | The same ad as a Google Web Designer document (Display & Video 360 → Interstitial), ready to publish from GWD. |
 
-`gwd/` is generated from `plain/`. After changing anything in `plain/`, run `python3 tools/make_gwd.py`. It updates `gwd/Creative-Developer.html` in place, writes `gwd/bmw-ad.css` and `gwd/bmw-ad.js`, and copies the images. Reopen the document in GWD afterwards.
+`gwd/` is generated from `plain/`: `bmw-ad.css` and `bmw-ad.js` are the plain stylesheet and scripts with the changes below, and `gwd/assets/build/` is a copy of the plain images.
 
 What changes in the GWD version:
 - **CSS and JS:** they live in linked files rather than inline. GWD re-saves inline CSS through Chrome (which drops `-webkit-` properties iOS needs), and it scans inline scripts for asset paths.
@@ -71,7 +71,7 @@ All of it uses `transform` / `opacity` in a single `requestAnimationFrame` loop:
 - **Feature cards** live in the street layer and tilt in a slight cover-flow as they pass the centre. The centred card turns from dim to bright.
 - **HUD:** five progress segments (one per card, lit when seen) and a live km/h readout.
 
-## Asset processing (`tools/build_assets.py`)
+## Asset processing
 
 - **Car cut-out:** the car is separated from the grey studio background by brightness. Enclosed light areas are filled in, so the windows stay part of the car. The edge gets a soft alpha, then the grey studio tint is removed from the edge pixels so no halo shows on the dark street.
 - **Floor:** the studio floor shadow below the sill is removed. The windows are darkened to night-tinted glass, and the body is graded down to night exposure.
@@ -100,12 +100,9 @@ plain/
   assets/build/         runtime images
 gwd/
   Creative-Developer.html   GWD document (DV360 interstitial)
-  bmw-ad.css, bmw-ad.js     generated from plain/ by tools/make_gwd.py
+  bmw-ad.css, bmw-ad.js     plain/ styles + scripts, adapted for GWD
   gwd*_min.js / *_style.css GWD's own component files
   assets/build/             copy of plain/assets/build/
-tools/
-  build_assets.py       car cut-out, 3-layer wheels, motion blur, photo crops
-  make_gwd.py           builds gwd/ from plain/
 ```
 
 ## With more time

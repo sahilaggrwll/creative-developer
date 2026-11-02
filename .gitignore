@@ -1,7 +1,11 @@
-# brief + private notes
+# Local only: brief + notes, source images, build scripts, GWD editor files
 Creative-Developer-Test-Brief.pdf
 Creative-Developer-Brief.md
 Execution-Plan.md
-# Gemini originals for tools/build_assets.py (large, carry the visible watermark)
-assets/source/
+/assets/
+/tools/
 __pycache__/
+gwd/gwd_workspace.json
+gwd/Creative-Developer_groups_archive
+gwd/gwd_preview_*/
+gwd/Creative-Developer/
