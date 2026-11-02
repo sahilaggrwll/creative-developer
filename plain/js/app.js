@@ -502,8 +502,14 @@
     ad.classList.add('closing');
     setTimeout(function () {
       ad.hidden = true;
-      if (el.closed) el.closed.hidden = false;      // desktop review only; ad servers handle close
+      if (el.closed) el.closed.hidden = false;      // seen only outside an ad server
     }, 320);
+    // Inside DV360 / Studio the Enabler dismisses the interstitial
+    var E = window.Enabler;
+    if (E && typeof E.close === 'function') {
+      if (typeof E.reportManualClose === 'function') E.reportManualClose();
+      E.close();
+    }
   });
 
   if ($('reopen')) $('reopen').addEventListener('click', function () {

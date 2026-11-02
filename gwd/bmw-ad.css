@@ -587,9 +587,11 @@ div.layer > canvas { position: absolute; left: 0; }
 #ad[data-state="endcard"] .replay { animation: fade-up 0.6s 1.5s ease forwards; }
 
 /* ---------- Closed / rotate ---------- */
+[hidden] { display: none !important; }
 .closed {
   position: absolute;
   inset: 0;
+  background: var(--bg);
   display: grid;
   place-content: center;
   gap: 14px;
@@ -647,8 +649,6 @@ div.layer > canvas { position: absolute; left: 0; }
 
 
 /* ---- GWD build ---- */
-/* the ad server provides the close button */
-.close { display: none; }
 /* fill whatever page size GWD gives the creative */
 #ad { position: absolute; inset: 0; z-index: 1; }
 /* GWD pages set preserve-3d on every descendant; the ad is built for flat layering */

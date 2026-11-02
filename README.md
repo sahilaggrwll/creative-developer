@@ -35,7 +35,7 @@ Everything else is drawn in code: the city, the street, rain, light effects and 
 What changes in the GWD version:
 - **CSS and JS:** they live in linked files rather than inline. GWD re-saves inline CSS through Chrome (which drops `-webkit-` properties iOS needs), and it scans inline scripts for asset paths.
 - **Click-through:** the CTA calls `Enabler.exit('CTA', url)`, so no GWD Exit event is needed.
-- **Close button:** the ad's own × is hidden, because the ad server draws one.
+- **Close button:** besides closing the ad, the × calls `Enabler.reportManualClose()` and `Enabler.close()`, so the ad server counts the close and dismisses the interstitial.
 - **Media rules:** GWD only understands width breakpoints. The reduced-motion and landscape rules become class rules, switched by `matchMedia`, and the desktop review frame is dropped.
 - **Images:** GWD turns `<img>` into `<gwd-image>`, and extra CSS keeps both laid out the same.
 
