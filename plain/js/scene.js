@@ -1,5 +1,5 @@
 /* ============================================================
-   AETHER GT-E · Scene painter
+   BMW M4 Competition · Scene painter
    Paints the night-city panorama procedurally into one canvas per
    parallax layer. Painting happens once per layout (load / resize);
    at runtime the layers only move via transform.
@@ -47,11 +47,11 @@
   /* ---------- SKY ---------- */
   function paintSky(ctx, w, h, H, r) {
     var g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, '#02040a');
-    g.addColorStop(0.4, '#081022');
-    g.addColorStop(0.72, '#161b33');
-    g.addColorStop(0.9, '#33263a');
-    g.addColorStop(1, '#4c3334');
+    g.addColorStop(0, '#03050b');
+    g.addColorStop(0.35, '#0d1222');
+    g.addColorStop(0.62, '#2b2230');
+    g.addColorStop(0.82, '#6b4128');
+    g.addColorStop(1, '#a8622a');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
 
@@ -75,7 +75,7 @@
       var cx = r() * w, cy = h * between(r, 0.45, 0.85), rw = between(r, 80, 220);
       ctx.save();
       ctx.translate(cx, cy); ctx.scale(1, 0.18);
-      glow(ctx, 0, 0, rw, '150,100,110', between(r, 0.05, 0.12));
+      glow(ctx, 0, 0, rw, '255,150,70', between(r, 0.08, 0.16));
       ctx.restore();
     }
   }
@@ -96,8 +96,8 @@
       // sparse window specks
       for (var wy = top + 4; wy < h - 4; wy += 5) {
         for (var wx = x + 3; wx < x + bw - 3; wx += 4) {
-          if (r() < 0.07) {
-            ctx.fillStyle = 'rgba(255,214,150,' + between(r, 0.25, 0.6) + ')';
+          if (r() < 0.2) {
+            ctx.fillStyle = 'rgba(255,200,110,' + between(r, 0.45, 0.85) + ')';
             ctx.fillRect(wx, wy, 1, 1.4);
           }
         }
@@ -106,8 +106,8 @@
     }
     // atmospheric haze toward the ground
     var g = ctx.createLinearGradient(0, h * 0.35, 0, h);
-    g.addColorStop(0, 'rgba(60,48,78,0)');
-    g.addColorStop(1, 'rgba(84,60,78,0.62)');
+    g.addColorStop(0, 'rgba(150,90,40,0)');
+    g.addColorStop(1, 'rgba(190,110,45,0.6)');
     ctx.fillStyle = g;
     ctx.fillRect(0, 0, w, h);
   }
@@ -130,10 +130,10 @@
       ctx.fillStyle = 'rgba(0,0,0,0.25)';
       for (var m = x + 5; m < x + bw; m += 5) ctx.fillRect(m, top, 1, bh);
       for (var fy = top + 6; fy < top + bh - 6; fy += 7) {
-        if (r() < 0.32) {
+        if (r() < 0.55) {
           var len = bw * between(r, 0.3, 1);
           var start = x + between(r, 0, bw - len);
-          ctx.fillStyle = 'rgba(' + pick(r, COOL) + ',' + between(r, 0.35, 0.75) + ')';
+          ctx.fillStyle = 'rgba(' + pick(r, r() < 0.7 ? WARM : COOL) + ',' + between(r, 0.6, 0.95) + ')';
           ctx.fillRect(start, fy, len, 3.4);
         }
       }
@@ -145,18 +145,18 @@
     wh = kind === 'bands' ? 3 : rowH - 4.5;
     cols = Math.max(1, Math.floor((bw - 6) / colW));
     var ox = x + (bw - cols * colW) / 2 + (kind === 'bands' ? 4 : 1.5);
-    var palette = r() > 0.4 ? WARM : COOL;
+    var palette = r() > 0.12 ? WARM : COOL;
     for (var y = top + 8; y < top + bh - rowH; y += rowH) {
-      var occ = r() < 0.18 ? 0 : between(r, 0.15, 0.85);
+      var occ = r() < 0.08 ? 0 : between(r, 0.45, 0.95);
       for (var c = 0; c < cols; c++) {
         var wx = ox + c * colW;
         if (r() < occ) {
-          ctx.fillStyle = 'rgba(' + pick(r, palette) + ',' + between(r, 0.55, 0.95) + ')';
+          ctx.fillStyle = 'rgba(' + pick(r, palette) + ',' + between(r, 0.75, 1) + ')';
           ctx.fillRect(wx, y, ww, wh);
           // interior depth: darker lower half of some windows
           if (r() < 0.4) { ctx.fillStyle = 'rgba(20,14,10,0.35)'; ctx.fillRect(wx, y + wh * 0.6, ww, wh * 0.4); }
         } else {
-          ctx.fillStyle = 'rgba(60,80,120,0.16)';
+          ctx.fillStyle = 'rgba(120,80,40,0.22)';
           ctx.fillRect(wx, y, ww, wh);
         }
       }
@@ -192,11 +192,11 @@
     ctx.shadowColor = 'rgba(120,215,255,0.8)'; ctx.shadowBlur = 6;
     ctx.fillStyle = '#e9f6ff';
     ctx.font = '800 ' + Math.round(h * 0.36) + 'px "Barlow Condensed", "Arial Narrow", sans-serif';
-    ctx.fillText('AETHER GT-E', x + 8, y + h * 0.5);
+    ctx.fillText('BMW M4', x + 8, y + h * 0.5);
     ctx.shadowBlur = 0;
     ctx.fillStyle = 'rgba(120,215,255,0.9)';
     ctx.font = '600 ' + Math.round(h * 0.17) + 'px "Barlow Condensed", "Arial Narrow", sans-serif';
-    ctx.fillText('720 KM  ·  ZERO EMISSIONS', x + 8, y + h * 0.78);
+    ctx.fillText('COMPETITION  ·  530 HP', x + 8, y + h * 0.78);
     ctx.restore();
     ctx.strokeStyle = 'rgba(255,255,255,0.12)';
     ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
@@ -206,8 +206,11 @@
     var x = -20, billboardAt = w * 0.42, billboardDone = false;
     while (x < w) {
       var bw = between(r, 44, 112);
+      if (!billboardDone && x > billboardAt) bw = 140;          // wide block to carry the billboard
       var tall = r() > 0.82;
-      var bh = (tall ? between(r, 0.46, 0.62) : between(r, 0.18, 0.42)) * H;
+      // tall enough that lit facades sit behind the whole feature-card band
+      // (capped so rooftops stay below the HUD at the top of the screen)
+      var bh = (tall ? between(r, 0.5, 0.55) : between(r, 0.4, 0.5)) * H;
       bh = Math.min(bh, h - 6);
       var top = h - bh;
       var base = Math.floor(between(r, 11, 19));
@@ -216,8 +219,15 @@
       g.addColorStop(1, 'rgb(' + base + ',' + (base + 2) + ',' + (base + 10) + ')');
       ctx.fillStyle = g;
       ctx.fillRect(x, top, bw, bh);
+      // sodium street light washing up the facade
+      var up = ctx.createLinearGradient(0, h, 0, top);
+      up.addColorStop(0, 'rgba(255,165,70,0.42)');
+      up.addColorStop(0.45, 'rgba(255,150,60,0.14)');
+      up.addColorStop(1, 'rgba(255,150,60,0.04)');
+      ctx.fillStyle = up;
+      ctx.fillRect(x, top, bw, bh);
       // rim light from the city glow
-      ctx.fillStyle = 'rgba(150,170,220,0.12)';
+      ctx.fillStyle = 'rgba(255,200,140,0.18)';
       ctx.fillRect(x, top, 1.5, bh);
       ctx.fillStyle = 'rgba(0,0,0,0.3)';
       ctx.fillRect(x + bw - 2, top, 2, bh);
@@ -233,8 +243,8 @@
         beacons.push({ x: x + bw / 2, y: top - 26 });
       }
 
-      if (!billboardDone && x > billboardAt && bh < 0.36 * H) {
-        paintBillboard(ctx, x + 4, top - 70, 128, 50);
+      if (!billboardDone && x > billboardAt && bw > 120) {      // mounted on the facade
+        paintBillboard(ctx, x + (bw - 128) / 2, top + 0.12 * H, 128, 50);
         billboardDone = true;
       } else if (r() < 0.3 && bh > 0.2 * H) {
         var n = pick(r, NEON);
@@ -243,8 +253,8 @@
       x += bw + (r() < 0.3 ? between(r, 2, 10) : 0);
     }
     var hz = ctx.createLinearGradient(0, h * 0.55, 0, h);
-    hz.addColorStop(0, 'rgba(40,30,50,0)');
-    hz.addColorStop(1, 'rgba(60,40,52,0.45)');
+    hz.addColorStop(0, 'rgba(160,90,40,0)');
+    hz.addColorStop(1, 'rgba(200,115,45,0.4)');
     ctx.fillStyle = hz; ctx.fillRect(0, 0, w, h);
   }
 
@@ -316,7 +326,6 @@
     // street lamps
     var spacing = m.lampSpacing, lampTopY = m.lampY;
     for (var lx = m.lampOffset; lx < w + spacing; lx += spacing) {
-      m.lamps.push(lx);
       var headX = lx + 20;
       // light cone
       var cone = ctx.createLinearGradient(0, lampTopY, 0, roadTop + 30);
@@ -413,7 +422,7 @@
   /* ---------- PUBLIC ---------- */
   /**
    * @param {object} o  { W, H, maxShift, dpr, canvases: {sky,far,mid,street,fore}, beaconEl }
-   * @returns {object}  stage metrics the app needs (road / ground lines, lamp positions)
+   * @returns {object}  stage metrics the app needs (road / ground lines, lamp spacing)
    */
   function paint(o) {
     var W = o.W, H = o.H, dpr = o.dpr;
@@ -425,7 +434,6 @@
       lampY: Math.round(H * 0.395),
       lampSpacing: Math.round(Math.max(200, W * 0.6)),
       lampOffset: Math.round(W * 0.3),
-      lamps: [],
       reflections: []
     };
     function widthFor(f) { return Math.ceil(W + o.maxShift * f + 2); }
