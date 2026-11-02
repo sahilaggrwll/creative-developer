@@ -1017,6 +1017,22 @@
     layout();
     requestAnimationFrame(frame);
   });
-  track('impression');
+
+  // Impression = the ad is on screen. Inside Google Web Designer the page stays
+  // hidden until the ad framework presents it (after Enabler init + polite load),
+  // so wait for GWD's 'pagepresenting'; fall back after 8 s so it can't go missing.
+  (function trackImpression() {
+    var page = ad.closest ? ad.closest('gwd-page') : null;
+    if (!page || page.classList.contains('gwd-play-animation')) { track('impression'); return; }
+    var done = false;
+    function fire(e) {
+      if (done) return;
+      done = true;
+      document.removeEventListener('pagepresenting', fire, true);
+      track('impression', e ? undefined : { fallback: true });
+    }
+    document.addEventListener('pagepresenting', fire, true);
+    setTimeout(function () { fire(null); }, 8000);
+  })();
 })();
 
